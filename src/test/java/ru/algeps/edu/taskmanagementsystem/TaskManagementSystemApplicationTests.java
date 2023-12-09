@@ -1,4 +1,4 @@
-package ru.algeps.edu.taskmanager;
+package ru.algeps.edu.taskmanagementsystem;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class TaskManagerApplicationTests {
+class TaskManagementSystemApplicationTests {
 
   @Test
   void contextLoads() {
