@@ -1,5 +1,8 @@
 package ru.algeps.edu.taskmanagementsystem.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum TaskStatus {
   IN_WAIT("В ожидании"),
   PROGRESS("В процессе"),
@@ -11,7 +14,4 @@ public enum TaskStatus {
     this.title = val;
   }
 
-  public String getTitle() {
-    return title;
-  }
 }

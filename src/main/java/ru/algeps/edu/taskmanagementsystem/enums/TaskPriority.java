@@ -1,5 +1,8 @@
 package ru.algeps.edu.taskmanagementsystem.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum TaskPriority {
   HIGH("Высокий"),
   MEDIUM("Средний"),
@@ -8,9 +11,5 @@ public enum TaskPriority {
 
   TaskPriority(String val) {
     this.title = val;
-  }
-
-  public String getTitle() {
-    return title;
   }
 }
