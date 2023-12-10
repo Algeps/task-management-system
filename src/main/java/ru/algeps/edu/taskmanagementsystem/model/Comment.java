@@ -3,10 +3,7 @@ package ru.algeps.edu.taskmanagementsystem.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import java.time.OffsetDateTime;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -14,7 +11,8 @@ import org.hibernate.annotations.GenericGenerator;
 @Table(name = "comments")
 @IdClass(CommentPK.class)
 @Builder
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Comment {
@@ -39,4 +37,35 @@ public class Comment {
   @Column(nullable = false, updatable = false)
   @CreationTimestamp
   private OffsetDateTime creationTimestamp;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof Comment comment)) return false;
+
+    if (getTaskCommentId() != comment.getTaskCommentId()) return false;
+    if (!getText().equals(comment.getText())) return false;
+    return getCreationTimestamp().equals(comment.getCreationTimestamp());
+  }
+
+  @Override
+  public int hashCode() {
+    int result = getTaskCommentId();
+    result = 31 * result + getText().hashCode();
+    result = 31 * result + getCreationTimestamp().hashCode();
+    return result;
+  }
+
+  @Override
+  public String toString() {
+    return "Comment{"
+        + "taskCommentId="
+        + taskCommentId
+        + ", text='"
+        + text
+        + '\''
+        + ", creationTimestamp="
+        + creationTimestamp
+        + '}';
+  }
 }
