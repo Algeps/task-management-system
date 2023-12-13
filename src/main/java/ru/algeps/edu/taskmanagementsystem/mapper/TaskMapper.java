@@ -2,8 +2,8 @@ package ru.algeps.edu.taskmanagementsystem.mapper;
 
 import java.util.List;
 import org.springframework.lang.Nullable;
-import ru.algeps.edu.taskmanagementsystem.dto.TaskDto;
-import ru.algeps.edu.taskmanagementsystem.dto.TaskEditOrCreateDto;
+import ru.algeps.edu.taskmanagementsystem.dto.task.TaskDto;
+import ru.algeps.edu.taskmanagementsystem.dto.task.TaskEditOrCreateDto;
 import ru.algeps.edu.taskmanagementsystem.model.Comment;
 import ru.algeps.edu.taskmanagementsystem.model.Task;
 import ru.algeps.edu.taskmanagementsystem.model.User;

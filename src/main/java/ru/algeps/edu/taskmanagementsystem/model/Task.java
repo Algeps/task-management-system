@@ -37,7 +37,7 @@ public class Task {
   @Column(nullable = false)
   private TaskPriority priority;
 
-  @Column(nullable = false, updatable = false)
+  @Column(nullable = false, updatable = false, columnDefinition = "TIMESTAMP(0)")
   @CreationTimestamp
   private OffsetDateTime creationTimestamp;
 

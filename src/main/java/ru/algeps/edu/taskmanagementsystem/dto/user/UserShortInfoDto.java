@@ -1,4 +1,4 @@
-package ru.algeps.edu.taskmanagementsystem.dto;
+package ru.algeps.edu.taskmanagementsystem.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

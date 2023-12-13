@@ -1,4 +1,4 @@
-package ru.algeps.edu.taskmanagementsystem.dto;
+package ru.algeps.edu.taskmanagementsystem.dto.task;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,10 +1,11 @@
-package ru.algeps.edu.taskmanagementsystem.dto;
+package ru.algeps.edu.taskmanagementsystem.dto.comment;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import ru.algeps.edu.taskmanagementsystem.dto.user.UserShortInfoDto;
 
 @Data
 @Builder

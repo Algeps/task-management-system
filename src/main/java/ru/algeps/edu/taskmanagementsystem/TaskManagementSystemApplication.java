@@ -5,8 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * todo
- *  1) тесты (в том числе нужно испаорвить мапперы), потом коммит
- *  2) следующим коммитом сделать swagger и дополнительные методы
+ *  1) следующим коммитом сделать swagger и дополнительные методы
+ *  2) сделать JWT токен авторизации
  */
 @SpringBootApplication
 public class TaskManagementSystemApplication {

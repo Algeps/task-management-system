@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.algeps.edu.taskmanagementsystem.dto.CommentDto;
+import ru.algeps.edu.taskmanagementsystem.dto.comment.CommentDto;
 import ru.algeps.edu.taskmanagementsystem.dto.PaginationListDto;
 import ru.algeps.edu.taskmanagementsystem.dto.PaginationParameterDto;
 import ru.algeps.edu.taskmanagementsystem.service.comment.CommentService;
@@ -22,9 +22,9 @@ public class CommentController {
     return ResponseEntity.status(HttpStatus.CREATED).body(commentService.create(dto));
   }
 
-  @GetMapping("/{id}")
+  @GetMapping("/{taskId}")
   ResponseEntity<PaginationListDto<CommentDto>> read(
-      @PathVariable @Valid @Positive Long id, @RequestParam PaginationParameterDto dto) {
-    return ResponseEntity.ok(commentService.readAllPagination(id, dto));
+      @PathVariable @Valid @Positive Long taskId, @Valid PaginationParameterDto dto) {
+    return ResponseEntity.ok(commentService.readAllPagination(taskId, dto));
   }
 }

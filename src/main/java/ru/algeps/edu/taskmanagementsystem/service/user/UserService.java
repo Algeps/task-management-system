@@ -1,7 +1,7 @@
 package ru.algeps.edu.taskmanagementsystem.service.user;
 
 import org.springframework.stereotype.Service;
-import ru.algeps.edu.taskmanagementsystem.dto.UserDto;
+import ru.algeps.edu.taskmanagementsystem.dto.user.UserDto;
 
 @Service
 public interface UserService {

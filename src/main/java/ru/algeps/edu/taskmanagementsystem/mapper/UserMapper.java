@@ -1,7 +1,7 @@
 package ru.algeps.edu.taskmanagementsystem.mapper;
 
-import ru.algeps.edu.taskmanagementsystem.dto.UserDto;
-import ru.algeps.edu.taskmanagementsystem.dto.UserShortInfoDto;
+import ru.algeps.edu.taskmanagementsystem.dto.user.UserDto;
+import ru.algeps.edu.taskmanagementsystem.dto.user.UserShortInfoDto;
 import ru.algeps.edu.taskmanagementsystem.model.User;
 
 public class UserMapper {

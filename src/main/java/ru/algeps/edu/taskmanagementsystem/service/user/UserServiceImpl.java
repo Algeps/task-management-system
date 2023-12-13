@@ -5,7 +5,7 @@ import static ru.algeps.edu.taskmanagementsystem.mapper.UserMapper.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.algeps.edu.taskmanagementsystem.dto.UserDto;
+import ru.algeps.edu.taskmanagementsystem.dto.user.UserDto;
 import ru.algeps.edu.taskmanagementsystem.model.User;
 import ru.algeps.edu.taskmanagementsystem.repository.UserRepository;
 

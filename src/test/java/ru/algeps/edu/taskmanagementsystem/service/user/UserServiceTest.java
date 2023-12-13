@@ -9,7 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.algeps.edu.taskmanagementsystem.dto.UserDto;
+import ru.algeps.edu.taskmanagementsystem.dto.user.UserDto;
 import ru.algeps.edu.taskmanagementsystem.model.User;
 import ru.algeps.edu.taskmanagementsystem.repository.UserRepository;
 

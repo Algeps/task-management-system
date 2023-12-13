@@ -1,4 +1,4 @@
-package ru.algeps.edu.taskmanagementsystem.dto;
+package ru.algeps.edu.taskmanagementsystem.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,7 +11,9 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDto {
+  @JsonProperty(access = JsonProperty.Access.READ_ONLY)
   private Long userId;
+
   private String login;
 
   @JsonInclude(JsonInclude.Include.NON_NULL)

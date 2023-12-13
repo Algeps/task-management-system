@@ -2,11 +2,12 @@ package ru.algeps.edu.taskmanagementsystem.service.comment;
 
 import static ru.algeps.edu.taskmanagementsystem.mapper.CommentMapper.*;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import ru.algeps.edu.taskmanagementsystem.dto.CommentDto;
+import ru.algeps.edu.taskmanagementsystem.dto.comment.CommentDto;
 import ru.algeps.edu.taskmanagementsystem.dto.PaginationListDto;
 import ru.algeps.edu.taskmanagementsystem.dto.PaginationParameterDto;
 import ru.algeps.edu.taskmanagementsystem.model.Comment;
@@ -34,6 +35,9 @@ public class CommentServiceImpl implements CommentService {
   @Override
   public PaginationListDto<CommentDto> readAllPagination(
       Long taskId, PaginationParameterDto parameter) {
+    if (!taskRepository.existsById(taskId)) {
+      throw new EntityNotFoundException("Task not found with id:" + taskId);
+    }
     Page<Comment> page =
         commentRepository.getCommentsDescOrder(
             taskId, PageRequest.of(parameter.getOffset(), parameter.getLimit()));

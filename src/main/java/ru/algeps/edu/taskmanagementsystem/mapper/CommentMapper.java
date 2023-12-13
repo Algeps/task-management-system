@@ -2,7 +2,7 @@ package ru.algeps.edu.taskmanagementsystem.mapper;
 
 import java.util.Collections;
 import java.util.List;
-import ru.algeps.edu.taskmanagementsystem.dto.CommentDto;
+import ru.algeps.edu.taskmanagementsystem.dto.comment.CommentDto;
 import ru.algeps.edu.taskmanagementsystem.dto.PaginationListDto;
 import ru.algeps.edu.taskmanagementsystem.model.Comment;
 import ru.algeps.edu.taskmanagementsystem.model.Task;

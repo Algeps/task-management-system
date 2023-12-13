@@ -6,8 +6,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.algeps.edu.taskmanagementsystem.dto.TaskDto;
-import ru.algeps.edu.taskmanagementsystem.dto.TaskEditOrCreateDto;
+import ru.algeps.edu.taskmanagementsystem.dto.task.TaskDto;
+import ru.algeps.edu.taskmanagementsystem.dto.task.TaskEditOrCreateDto;
 import ru.algeps.edu.taskmanagementsystem.service.task.TaskService;
 
 @RestController
@@ -18,7 +18,7 @@ public class TaskController {
 
   // todo 1) Пользователи могут просматривать задачи других пользователей, а исполнители задачи
   //   могут менять статус своих задач.
-  //    2) Конкретного автора и исполнителя.
+  //    2) Конкретного автора и исполнителя.!!!
 
   @PostMapping("/")
   ResponseEntity<TaskDto> create(@RequestBody TaskEditOrCreateDto task) {

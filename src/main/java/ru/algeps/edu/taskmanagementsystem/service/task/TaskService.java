@@ -1,8 +1,8 @@
 package ru.algeps.edu.taskmanagementsystem.service.task;
 
 import org.springframework.stereotype.Service;
-import ru.algeps.edu.taskmanagementsystem.dto.TaskDto;
-import ru.algeps.edu.taskmanagementsystem.dto.TaskEditOrCreateDto;
+import ru.algeps.edu.taskmanagementsystem.dto.task.TaskDto;
+import ru.algeps.edu.taskmanagementsystem.dto.task.TaskEditOrCreateDto;
 
 @Service
 public interface TaskService {

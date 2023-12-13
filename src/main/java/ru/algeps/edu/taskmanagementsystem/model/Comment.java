@@ -33,7 +33,7 @@ public class Comment {
   @Column(nullable = false, length = 32_767)
   private String text;
 
-  @Column(nullable = false, updatable = false)
+  @Column(nullable = false, updatable = false, columnDefinition = "TIMESTAMP(0)")
   @CreationTimestamp
   private OffsetDateTime creationTimestamp;
 }

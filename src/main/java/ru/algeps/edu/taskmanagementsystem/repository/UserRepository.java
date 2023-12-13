@@ -6,5 +6,4 @@ import ru.algeps.edu.taskmanagementsystem.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-  User getUserByLogin(String login);
 }
