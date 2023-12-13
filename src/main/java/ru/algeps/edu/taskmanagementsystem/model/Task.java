@@ -5,13 +5,15 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.*;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.CreationTimestamp;
 import ru.algeps.edu.taskmanagementsystem.enums.TaskPriority;
 import ru.algeps.edu.taskmanagementsystem.enums.TaskStatus;
 
 @Entity
 @Table(name = "tasks")
-@Builder
+@Accessors(chain = true)
+@Builder(toBuilder = true)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -19,7 +21,7 @@ import ru.algeps.edu.taskmanagementsystem.enums.TaskStatus;
 public class Task {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long taskId;
+  private Long taskId;
 
   @Column(nullable = false)
   private String header;
@@ -39,11 +41,11 @@ public class Task {
   @CreationTimestamp
   private OffsetDateTime creationTimestamp;
 
-  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @ManyToOne(fetch = FetchType.EAGER, optional = false)
   @JoinColumn(name = "user_author_id", nullable = false)
   private User userAuthor;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "user_executor_id")
   private User userExecutor;
 
@@ -52,6 +54,7 @@ public class Task {
       fetch = FetchType.LAZY,
       cascade = CascadeType.ALL,
       orphanRemoval = true)
+  @Builder.Default
   private List<Comment> comments = new ArrayList<>();
 
   @Override
@@ -59,24 +62,36 @@ public class Task {
     if (this == o) return true;
     if (!(o instanceof Task task)) return false;
 
-    if (getTaskId() != task.getTaskId()) return false;
-    if (!getHeader().equals(task.getHeader())) return false;
+    if (getTaskId() != null ? !getTaskId().equals(task.getTaskId()) : task.getTaskId() != null)
+      return false;
+    if (getHeader() != null ? !getHeader().equals(task.getHeader()) : task.getHeader() != null)
+      return false;
     if (getDescription() != null
         ? !getDescription().equals(task.getDescription())
         : task.getDescription() != null) return false;
     if (getStatus() != task.getStatus()) return false;
     if (getPriority() != task.getPriority()) return false;
-    return getCreationTimestamp().equals(task.getCreationTimestamp());
+    if (getCreationTimestamp() != null
+        ? !getCreationTimestamp().equals(task.getCreationTimestamp())
+        : task.getCreationTimestamp() != null) return false;
+    if (getUserAuthor() != null
+        ? !getUserAuthor().equals(task.getUserAuthor())
+        : task.getUserAuthor() != null) return false;
+    return getUserExecutor() != null
+        ? getUserExecutor().equals(task.getUserExecutor())
+        : task.getUserExecutor() == null;
   }
 
   @Override
   public int hashCode() {
-    int result = (int) (getTaskId() ^ (getTaskId() >>> 32));
-    result = 31 * result + getHeader().hashCode();
+    int result = getTaskId() != null ? getTaskId().hashCode() : 0;
+    result = 31 * result + (getHeader() != null ? getHeader().hashCode() : 0);
     result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
-    result = 31 * result + getStatus().hashCode();
-    result = 31 * result + getPriority().hashCode();
-    result = 31 * result + getCreationTimestamp().hashCode();
+    result = 31 * result + (getStatus() != null ? getStatus().hashCode() : 0);
+    result = 31 * result + (getPriority() != null ? getPriority().hashCode() : 0);
+    result = 31 * result + (getCreationTimestamp() != null ? getCreationTimestamp().hashCode() : 0);
+    result = 31 * result + (getUserAuthor() != null ? getUserAuthor().hashCode() : 0);
+    result = 31 * result + (getUserExecutor() != null ? getUserExecutor().hashCode() : 0);
     return result;
   }
 
@@ -97,6 +112,10 @@ public class Task {
         + priority
         + ", creationTimestamp="
         + creationTimestamp
+        + ", userAuthor="
+        + userAuthor
+        + ", userExecutor="
+        + userExecutor
         + '}';
   }
 }

@@ -5,10 +5,12 @@ import jakarta.validation.constraints.Email;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.*;
+import lombok.experimental.Accessors;
 
 @Entity
 @Table(name = "users")
-@Builder
+@Accessors(chain = true)
+@Builder(toBuilder = true)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,7 +18,7 @@ import lombok.*;
 public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long userId;
+  private Long userId;
 
   @Column(nullable = false, unique = true)
   private String login;
@@ -39,18 +41,23 @@ public class User {
     if (this == o) return true;
     if (!(o instanceof User user)) return false;
 
-    if (getUserId() != user.getUserId()) return false;
-    if (!getLogin().equals(user.getLogin())) return false;
-    if (!getEmail().equals(user.getEmail())) return false;
-    return getPassword().equals(user.getPassword());
+    if (getUserId() != null ? !getUserId().equals(user.getUserId()) : user.getUserId() != null)
+      return false;
+    if (getLogin() != null ? !getLogin().equals(user.getLogin()) : user.getLogin() != null)
+      return false;
+    if (getEmail() != null ? !getEmail().equals(user.getEmail()) : user.getEmail() != null)
+      return false;
+    return getPassword() != null
+        ? getPassword().equals(user.getPassword())
+        : user.getPassword() == null;
   }
 
   @Override
   public int hashCode() {
-    int result = (int) (getUserId() ^ (getUserId() >>> 32));
-    result = 31 * result + getLogin().hashCode();
-    result = 31 * result + getEmail().hashCode();
-    result = 31 * result + getPassword().hashCode();
+    int result = getUserId() != null ? getUserId().hashCode() : 0;
+    result = 31 * result + (getLogin() != null ? getLogin().hashCode() : 0);
+    result = 31 * result + (getEmail() != null ? getEmail().hashCode() : 0);
+    result = 31 * result + (getPassword() != null ? getPassword().hashCode() : 0);
     return result;
   }
 
