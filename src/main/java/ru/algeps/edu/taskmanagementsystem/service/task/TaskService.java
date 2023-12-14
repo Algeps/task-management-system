@@ -3,14 +3,16 @@ package ru.algeps.edu.taskmanagementsystem.service.task;
 import org.springframework.stereotype.Service;
 import ru.algeps.edu.taskmanagementsystem.dto.task.TaskDto;
 import ru.algeps.edu.taskmanagementsystem.dto.task.TaskEditOrCreateDto;
+import ru.algeps.edu.taskmanagementsystem.dto.task.TaskStatusDto;
 
 @Service
 public interface TaskService {
-  TaskDto create(TaskEditOrCreateDto dto);
+  TaskDto create(Long userAuthorI, TaskEditOrCreateDto dto);
 
-  TaskDto read(Long id);
+  TaskDto read(Long taskId);
 
-  TaskDto update(Long id, TaskEditOrCreateDto dto);
+  TaskDto updateAsAuthor(Long userAuthorId, Long taskId, TaskEditOrCreateDto dto);
+  TaskDto updateAsExecutor(Long userExecutorId, Long taskId, TaskStatusDto dto);
 
-  void delete(Long id);
+  void delete(Long userId, Long taskId);
 }

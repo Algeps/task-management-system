@@ -16,5 +16,5 @@ public class UserShortInfoDto {
   private Long userId;
 
   @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-  private String login;
+  private String email;
 }

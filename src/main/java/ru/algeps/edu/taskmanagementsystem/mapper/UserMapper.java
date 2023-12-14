@@ -24,7 +24,6 @@ public class UserMapper {
       return null;
     }
 
-    if (dto.getUserId() != null) user.setUserId(dto.getUserId());
     if (dto.getEmail() != null) user.setEmail(dto.getEmail());
     if (dto.getPassword() != null) user.setPassword(dto.getPassword());
     if (dto.getLogin() != null) user.setLogin(dto.getLogin());
@@ -37,7 +36,6 @@ public class UserMapper {
     }
 
     return UserDto.builder()
-        .userId(user.getUserId())
         .login(user.getLogin())
         .email(user.getEmail())
         .password(user.getPassword())

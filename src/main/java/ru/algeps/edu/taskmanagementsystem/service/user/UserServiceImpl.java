@@ -21,7 +21,6 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserDto read(Long id) {
-    // todo брать потом id создателя из тела запроса
     return mapperToUserDto(
         userRepository
             .findById(id)

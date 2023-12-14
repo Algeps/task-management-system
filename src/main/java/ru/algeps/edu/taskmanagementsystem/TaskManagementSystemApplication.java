@@ -5,7 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * todo
- *  1) следующим коммитом сделать swagger и дополнительные методы
  *  2) сделать JWT токен авторизации
  */
 @SpringBootApplication

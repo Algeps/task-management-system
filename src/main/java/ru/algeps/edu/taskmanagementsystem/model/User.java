@@ -20,9 +20,6 @@ public class User {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long userId;
 
-  @Column(nullable = false, unique = true)
-  private String login;
-
   @Email
   @Column(nullable = false, unique = true)
   private String email;
@@ -43,8 +40,6 @@ public class User {
 
     if (getUserId() != null ? !getUserId().equals(user.getUserId()) : user.getUserId() != null)
       return false;
-    if (getLogin() != null ? !getLogin().equals(user.getLogin()) : user.getLogin() != null)
-      return false;
     if (getEmail() != null ? !getEmail().equals(user.getEmail()) : user.getEmail() != null)
       return false;
     return getPassword() != null
@@ -55,7 +50,6 @@ public class User {
   @Override
   public int hashCode() {
     int result = getUserId() != null ? getUserId().hashCode() : 0;
-    result = 31 * result + (getLogin() != null ? getLogin().hashCode() : 0);
     result = 31 * result + (getEmail() != null ? getEmail().hashCode() : 0);
     result = 31 * result + (getPassword() != null ? getPassword().hashCode() : 0);
     return result;
@@ -66,9 +60,6 @@ public class User {
     return "User{"
         + "userId="
         + userId
-        + ", login='"
-        + login
-        + '\''
         + ", email='"
         + email
         + '\''

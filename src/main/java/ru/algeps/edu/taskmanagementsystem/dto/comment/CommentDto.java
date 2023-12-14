@@ -5,7 +5,6 @@ import java.time.OffsetDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import ru.algeps.edu.taskmanagementsystem.dto.user.UserShortInfoDto;
 
 @Data
 @Builder
@@ -15,9 +14,6 @@ public class CommentDto {
 
   @JsonProperty(access = JsonProperty.Access.READ_ONLY)
   private int taskCommentId;
-
-  @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-  private UserShortInfoDto userAuthor;
 
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private Long userAuthorId;

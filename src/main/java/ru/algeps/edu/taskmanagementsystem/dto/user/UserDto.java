@@ -11,11 +11,6 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDto {
-  @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-  private Long userId;
-
-  private String login;
-
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private String email;
 
