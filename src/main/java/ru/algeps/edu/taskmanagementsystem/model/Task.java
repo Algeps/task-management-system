@@ -7,6 +7,7 @@ import java.util.List;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import ru.algeps.edu.taskmanagementsystem.enums.TaskPriority;
 import ru.algeps.edu.taskmanagementsystem.enums.TaskStatus;
 
@@ -40,6 +41,10 @@ public class Task {
   @Column(nullable = false, updatable = false, columnDefinition = "TIMESTAMP(0)")
   @CreationTimestamp
   private OffsetDateTime creationTimestamp;
+
+  @Column(nullable = false, columnDefinition = "TIMESTAMP(0)")
+  @UpdateTimestamp
+  private OffsetDateTime updateTimestamp;
 
   @ManyToOne(fetch = FetchType.EAGER, optional = false)
   @JoinColumn(name = "user_author_id", nullable = false)

@@ -1,7 +1,6 @@
 package ru.algeps.edu.taskmanagementsystem.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.*;
@@ -20,16 +19,17 @@ public class User {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long userId;
 
-  @Email
   @Column(nullable = false, unique = true)
   private String email;
 
   @Column(nullable = false)
   private String password;
 
-  @OneToMany(mappedBy = "userAuthor", fetch = FetchType.LAZY)
+  @Builder.Default
+  @OneToMany(mappedBy = "userAuthor", fetch = FetchType.LAZY, orphanRemoval = true)
   private List<Task> tasksAsAuthor = new ArrayList<>();
 
+  @Builder.Default
   @OneToMany(mappedBy = "userExecutor", fetch = FetchType.LAZY)
   private List<Task> tasksAsExecutor = new ArrayList<>();
 

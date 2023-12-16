@@ -23,20 +23,20 @@ public class UserController {
 
   @Operation(summary = "Запрос информации о пользователе")
   @GetMapping("/{id}")
-  ResponseEntity<UserDto> read(@PathVariable @Valid @Positive Long id) {
+  public ResponseEntity<UserDto> read(@PathVariable @Valid @Positive Long id) {
     return ResponseEntity.ok(userService.read(id));
   }
 
   @Operation(summary = "Обновление информации пользователе")
   @PutMapping("/")
-  ResponseEntity<UserDto> update(@Valid @RequestBody UserDto dto) {
+  public ResponseEntity<UserDto> update(@Valid @RequestBody UserDto dto) {
     Long id = jwtAuthService.getAuthInfo().getId();
     return ResponseEntity.ok(userService.update(id, dto));
   }
 
   @Operation(summary = "Удаление пользователя")
   @DeleteMapping("/")
-  ResponseEntity<Void> delete() {
+  public ResponseEntity<Void> delete() {
     Long id = jwtAuthService.getAuthInfo().getId();
     userService.delete(id);
     return ResponseEntity.ok().build();

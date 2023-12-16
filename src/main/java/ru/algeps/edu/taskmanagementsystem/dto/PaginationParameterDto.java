@@ -16,7 +16,7 @@ public class PaginationParameterDto {
   @Builder.Default
   private Integer offset = 0;
 
-  @Min(5)
+  @Min(2)
   @Max(50)
   @Builder.Default
   private Integer limit = 30;

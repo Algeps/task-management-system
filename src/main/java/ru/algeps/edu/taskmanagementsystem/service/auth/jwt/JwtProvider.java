@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import javax.crypto.SecretKey;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.algeps.edu.taskmanagementsystem.model.User;
@@ -17,23 +17,28 @@ import ru.algeps.edu.taskmanagementsystem.model.User;
 @Slf4j
 @Component
 public class JwtProvider {
-  // todo время жизни метки тоже нужно настраивать из application.properties
+  private final Long lifeTimeSecondsAccessToken;
+  private final Long lifeTimeSecondsRefreshToken;
   private final SecretKey jwtAccessSecret;
   private final SecretKey jwtRefreshSecret;
 
   public JwtProvider(
       @Value("${jwt.secret.access}") String jwtAccessSecret,
-      @Value("${jwt.secret.refresh}") String jwtRefreshSecret) {
+      @Value("${jwt.secret.refresh}") String jwtRefreshSecret,
+      @Value("${jwt.lifetime.seconds.access}") Long lifeTimeSecondsAccessToken,
+      @Value("${jwt.lifetime.seconds.refresh}") Long lifeTimeSecondsRefreshToken) {
     this.jwtAccessSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtAccessSecret));
     this.jwtRefreshSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtRefreshSecret));
+    this.lifeTimeSecondsAccessToken = lifeTimeSecondsAccessToken;
+    this.lifeTimeSecondsRefreshToken = lifeTimeSecondsRefreshToken;
   }
 
   /** Access-токена - токен доступа. Каждые 5 минут выдаётся новый. */
-  public String generateAccessToken(@NonNull User user) {
-    final LocalDateTime now = LocalDateTime.now();
-    final Instant accessExpirationInstant =
-        now.plusMinutes(5).atZone(ZoneId.systemDefault()).toInstant();
-    final Date accessExpiration = Date.from(accessExpirationInstant);
+  public String generateAccessToken(@NotNull User user) {
+    LocalDateTime now = LocalDateTime.now();
+    Instant accessExpirationInstant =
+        now.plusSeconds(lifeTimeSecondsAccessToken).atZone(ZoneId.systemDefault()).toInstant();
+    Date accessExpiration = Date.from(accessExpirationInstant);
     return Jwts.builder()
         .subject(user.getEmail())
         .expiration(accessExpiration)
@@ -46,11 +51,11 @@ public class JwtProvider {
    * Refresh токен служит для обновления текущего Access-токена и Access-токена. Каждые 30 дней
    * выдаётся новый.
    */
-  public String generateRefreshToken(@NonNull User user) {
-    final LocalDateTime now = LocalDateTime.now();
-    final Instant refreshExpirationInstant =
-        now.plusDays(30).atZone(ZoneId.systemDefault()).toInstant();
-    final Date refreshExpiration = Date.from(refreshExpirationInstant);
+  public String generateRefreshToken(@NotNull User user) {
+    LocalDateTime now = LocalDateTime.now();
+    Instant refreshExpirationInstant =
+        now.plusSeconds(lifeTimeSecondsRefreshToken).atZone(ZoneId.systemDefault()).toInstant();
+    Date refreshExpiration = Date.from(refreshExpirationInstant);
     return Jwts.builder()
         .subject(user.getEmail())
         .expiration(refreshExpiration)
@@ -58,29 +63,29 @@ public class JwtProvider {
         .compact();
   }
 
-  public boolean validateAccessToken(@NonNull String accessToken) {
+  public boolean validateAccessToken(@NotNull String accessToken) throws JwtException {
     return validateToken(accessToken, jwtAccessSecret);
   }
 
-  public boolean validateRefreshToken(@NonNull String refreshToken) {
+  public boolean validateRefreshToken(@NotNull String refreshToken) throws JwtException {
     return validateToken(refreshToken, jwtRefreshSecret);
   }
 
-  private boolean validateToken(@NonNull String token, @NonNull SecretKey secret)
+  private boolean validateToken(@NotNull String token, @NotNull SecretKey secret)
       throws JwtException {
     Jwts.parser().verifyWith(secret).build().parseSignedClaims(token);
     return true;
   }
 
-  public Claims getAccessClaims(@NonNull String token) {
+  public Claims getAccessClaims(@NotNull String token) {
     return getClaims(token, jwtAccessSecret);
   }
 
-  public Claims getRefreshClaims(@NonNull String token) {
+  public Claims getRefreshClaims(@NotNull String token) {
     return getClaims(token, jwtRefreshSecret);
   }
 
-  private Claims getClaims(@NonNull String token, @NonNull SecretKey secret) {
+  private Claims getClaims(@NotNull String token, @NotNull SecretKey secret) {
     return Jwts.parser().verifyWith(secret).build().parseSignedClaims(token).getPayload();
   }
 }

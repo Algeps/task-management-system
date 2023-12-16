@@ -12,7 +12,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import ru.algeps.edu.taskmanagementsystem.filter.JwtFilter;
+import ru.algeps.edu.taskmanagementsystem.handler.FilterChainExceptionHandler;
 
 @SecurityScheme(type = SecuritySchemeType.HTTP, name = "jwt", scheme = "bearer")
 @EnableWebSecurity
@@ -20,7 +22,19 @@ import ru.algeps.edu.taskmanagementsystem.filter.JwtFilter;
 @AllArgsConstructor
 @EnableMethodSecurity
 public class SecurityConfiguration {
+  private final FilterChainExceptionHandler filterChainExceptionHandler;
   private final JwtFilter jwtFilter;
+  private static final String[] AUTH_WHITELIST = {
+    "/api-docs",
+    "/v2/api-docs",
+    "/swagger-resources",
+    "/swagger-resources/**",
+    "/configuration/ui",
+    "/configuration/security",
+    "/swagger-ui.html",
+    "/v3/api-docs/**",
+    "/swagger-ui/**"
+  };
 
   @Bean
   protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -32,12 +46,13 @@ public class SecurityConfiguration {
         .authorizeHttpRequests(
             request ->
                 request
-                    .requestMatchers("/api/auth/login", "/api/auth/reg")
+                    .requestMatchers("/api/auth/**")
                     .permitAll()
-                    .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
+                    .requestMatchers(AUTH_WHITELIST)
                     .permitAll()
                     .anyRequest()
                     .authenticated())
+        .addFilterAfter(filterChainExceptionHandler, LogoutFilter.class)
         .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
         .build();
   }

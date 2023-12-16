@@ -2,8 +2,9 @@ package ru.algeps.edu.taskmanagementsystem.mapper;
 
 import java.util.Collections;
 import java.util.List;
-import ru.algeps.edu.taskmanagementsystem.dto.comment.CommentDto;
 import ru.algeps.edu.taskmanagementsystem.dto.PaginationListDto;
+import ru.algeps.edu.taskmanagementsystem.dto.comment.CommentCreateDto;
+import ru.algeps.edu.taskmanagementsystem.dto.comment.CommentDto;
 import ru.algeps.edu.taskmanagementsystem.model.Comment;
 import ru.algeps.edu.taskmanagementsystem.model.Task;
 import ru.algeps.edu.taskmanagementsystem.model.User;
@@ -34,15 +35,15 @@ public class CommentMapper {
   }
 
   public static PaginationListDto<CommentDto> mapperToPaginationListCommentDto(
-      List<Comment> comments, long totalComments) {
-    if (comments == null) {
+      List<Comment> comments, Long totalComments) {
+    if (comments == null || totalComments == null) {
       return null;
     }
 
     return new PaginationListDto<>(mapperToListCommentDto(comments), totalComments);
   }
 
-  public static Comment mapperToComment(CommentDto dto, Task task, User userAuthor) {
-    return Comment.builder().task(task).user(userAuthor).text(dto.getText()).build();
+  public static Comment mapperToComment(CommentCreateDto dto, Task task, User userAuthor) {
+    return Comment.builder().task(task).user(userAuthor).text(dto.text()).build();
   }
 }

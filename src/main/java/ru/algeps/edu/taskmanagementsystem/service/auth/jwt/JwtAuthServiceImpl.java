@@ -1,15 +1,13 @@
 package ru.algeps.edu.taskmanagementsystem.service.auth.jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
-import io.jsonwebtoken.security.SignatureException;
+import io.jsonwebtoken.*;
 import java.util.HashMap;
 import java.util.Map;
-import lombok.NonNull;
+
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.algeps.edu.taskmanagementsystem.dto.jwt.JwtRequest;
 import ru.algeps.edu.taskmanagementsystem.dto.jwt.JwtResponse;
@@ -24,12 +22,12 @@ public class JwtAuthServiceImpl implements JwtAuthService {
   private final UserRepository userRepository;
   private final Map<String, String> refreshStorage = new HashMap<>();
   private final JwtProvider jwtProvider;
+  private final PasswordEncoder passwordEncoder;
 
   @Override
-  public JwtResponse login(@NonNull JwtRequest authRequest) {
+  public JwtResponse login(@NotNull JwtRequest authRequest) throws JwtAuthException {
     User user = getUserFromRepository(authRequest.email());
-    // todo здесь Bcrypt
-    if (user.getPassword().equals(authRequest.password())) {
+    if (isCorrectPassword(user.getPassword(), authRequest.password())) {
       String accessToken = jwtProvider.generateAccessToken(user);
       String refreshToken = jwtProvider.generateRefreshToken(user);
       refreshStorage.put(user.getEmail(), refreshToken);
@@ -39,13 +37,17 @@ public class JwtAuthServiceImpl implements JwtAuthService {
     }
   }
 
+  private boolean isCorrectPassword(String expectedPassword, String actualPassword) {
+    return passwordEncoder.matches(actualPassword, expectedPassword);
+  }
+
   @Override
-  public boolean validateAccessToken(@NonNull String token) {
+  public boolean validateAccessToken(@NotNull String token) throws JwtAuthException {
     return isValidAccessToken(token);
   }
 
   @Override
-  public JwtAuthentication getAuthenticationFromAccessToken(@NonNull String token) {
+  public JwtAuthentication getAuthenticationFromAccessToken(@NotNull String token) {
     Claims claims = jwtProvider.getAccessClaims(token);
     JwtAuthentication jwtInfoToken = JwtUtils.generate(claims);
     jwtInfoToken.setAuthenticated(true);
@@ -53,7 +55,7 @@ public class JwtAuthServiceImpl implements JwtAuthService {
   }
 
   @Override
-  public JwtResponse getAccessToken(@NonNull String refreshToken) {
+  public JwtResponse getAccessToken(@NotNull String refreshToken) throws JwtAuthException {
     if (isValidRefreshToken(refreshToken)) {
       Claims claims = jwtProvider.getRefreshClaims(refreshToken);
       String email = claims.getSubject();
@@ -68,7 +70,7 @@ public class JwtAuthServiceImpl implements JwtAuthService {
   }
 
   @Override
-  public JwtResponse refresh(@NonNull String refreshToken) {
+  public JwtResponse refresh(@NotNull String refreshToken) throws JwtAuthException {
     if (isValidRefreshToken(refreshToken)) {
       Claims claims = jwtProvider.getRefreshClaims(refreshToken);
       String login = claims.getSubject();
@@ -84,37 +86,23 @@ public class JwtAuthServiceImpl implements JwtAuthService {
     throw new JwtAuthException("Invalid JWT token!");
   }
 
-  private boolean isValidAccessToken(String token) {
+  private boolean isValidAccessToken(String token) throws JwtAuthException {
     try {
-      jwtProvider.validateAccessToken(token);
-      return true;
-    } catch (SignatureException se) {
-      throw new JwtAuthException("Invalid signature", se);
-    } catch (ExpiredJwtException eje) {
-      throw new JwtAuthException("Token expired", eje);
-    } catch (UnsupportedJwtException uje) {
-      throw new JwtAuthException("Unsupported jwt", uje);
-    } catch (MalformedJwtException mje) {
-      throw new JwtAuthException("Malformed jwt", mje);
+      return jwtProvider.validateAccessToken(token);
+    } catch (JwtException e) {
+      throw new JwtAuthException("Access token: " + e.getLocalizedMessage());
     } catch (RuntimeException re) {
-      throw new JwtAuthException("invalid token", re);
+      throw new JwtAuthException("Invalid Access token", re);
     }
   }
 
   private boolean isValidRefreshToken(String token) throws JwtAuthException {
     try {
-      jwtProvider.validateRefreshToken(token);
-      return true;
-    } catch (SignatureException se) {
-      throw new JwtAuthException("Invalid signature", se);
-    } catch (ExpiredJwtException eje) {
-      throw new JwtAuthException("Token expired", eje);
-    } catch (UnsupportedJwtException uje) {
-      throw new JwtAuthException("Unsupported jwt", uje);
-    } catch (MalformedJwtException mje) {
-      throw new JwtAuthException("Malformed jwt", mje);
+      return jwtProvider.validateRefreshToken(token);
+    } catch (JwtException e) {
+      throw new JwtAuthException("Refresh token:" + e.getLocalizedMessage());
     } catch (RuntimeException re) {
-      throw new JwtAuthException("invalid token", re);
+      throw new JwtAuthException("Invalid Refresh token", re);
     }
   }
 

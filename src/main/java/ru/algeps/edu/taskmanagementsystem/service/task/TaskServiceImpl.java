@@ -6,13 +6,16 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
 import java.util.Collections;
 import lombok.AllArgsConstructor;
-import lombok.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import ru.algeps.edu.taskmanagementsystem.dto.PaginationListDto;
+import ru.algeps.edu.taskmanagementsystem.dto.PaginationParameterDto;
 import ru.algeps.edu.taskmanagementsystem.dto.task.TaskDto;
 import ru.algeps.edu.taskmanagementsystem.dto.task.TaskEditOrCreateDto;
 import ru.algeps.edu.taskmanagementsystem.dto.task.TaskStatusDto;
+import ru.algeps.edu.taskmanagementsystem.enums.TaskSort;
 import ru.algeps.edu.taskmanagementsystem.exceptions.TaskServiceException;
 import ru.algeps.edu.taskmanagementsystem.model.Comment;
 import ru.algeps.edu.taskmanagementsystem.model.Task;
@@ -30,22 +33,35 @@ public class TaskServiceImpl implements TaskService {
   private CommentRepository commentRepository;
 
   @Override
-  public TaskDto create(@NonNull Long userAuthorId, @NonNull TaskEditOrCreateDto dto) {
+  public TaskDto create(@NotNull Long userAuthorId, @NotNull TaskEditOrCreateDto dto) {
     User userExecutor = getUserExecutor(dto);
     Task task = mapperToTask(dto, userRepository.getReferenceById(userAuthorId), userExecutor);
-    return mapperToTaskDto(taskRepository.saveAndFlush(task), Collections.emptyList(), 0);
+    Task newTask = getTaskById(taskRepository.saveAndFlush(task).getTaskId());
+    return mapperToTaskDto(newTask, Collections.emptyList(), 0);
   }
 
   @Override
-  public TaskDto read(@NonNull Long taskId) {
+  public TaskDto read(@NotNull Long taskId) {
     Task task = getTaskById(taskId);
     Page<Comment> commentPage = getCommentPageForTask(task);
     return mapperToTaskDto(task, commentPage.getContent(), commentPage.getTotalElements());
   }
 
   @Override
+  public PaginationListDto<TaskDto> readAllPagination(
+      @NotNull Long userId, @NotNull PaginationParameterDto parameter, @NotNull TaskSort taskSort) {
+    Page<Task> pageTask =
+        taskRepository.getPaginationTaskWithUsers(
+            userId,
+            PageRequest.of(
+                parameter.getOffset(), parameter.getLimit(), Sort.by(taskSort.getTitle())));
+
+    return mapperToPaginationTaskDto(pageTask.getContent(), pageTask.getTotalElements());
+  }
+
+  @Override
   public TaskDto updateAsAuthor(
-      @NotNull Long userAuthorId, @NonNull Long taskId, @NonNull TaskEditOrCreateDto dto) {
+      @NotNull Long userAuthorId, @NotNull Long taskId, @NotNull TaskEditOrCreateDto dto) {
     Task task = getTaskById(taskId);
     if (!task.getUserAuthor().getUserId().equals(userAuthorId)) {
       throw new TaskServiceException("Only the author can change the task fields!");
@@ -66,9 +82,10 @@ public class TaskServiceImpl implements TaskService {
 
   @Override
   public TaskDto updateAsExecutor(
-      @NotNull Long userExecutorId, @NonNull Long taskId, @NonNull TaskStatusDto dto) {
+      @NotNull Long userExecutorId, @NotNull Long taskId, @NotNull TaskStatusDto dto) {
     Task task = getTaskById(taskId);
-    if (!task.getUserExecutor().getUserId().equals(userExecutorId)) {
+    if (task.getUserExecutor() == null
+        || !task.getUserExecutor().getUserId().equals(userExecutorId)) {
       throw new TaskServiceException("Only the author can change the task fields!");
     }
 
@@ -77,24 +94,24 @@ public class TaskServiceImpl implements TaskService {
     return mapperToTaskDto(task, commentPage.getContent(), commentPage.getTotalElements());
   }
 
-  private Task getTaskById(Long taskId) {
-    return taskRepository
-        .findById(taskId)
-        .orElseThrow(() -> new EntityNotFoundException("Task not found with id:" + taskId));
-  }
-
   private Page<Comment> getCommentPageForTask(Task task) {
     return commentRepository.getCommentsDescOrder(
         task.getTaskId(), PageRequest.ofSize(NUMBER_OF_RECENT_COMMENTS_WHEN_DISPLAYING_TASK));
   }
 
   @Override
-  public void delete(@NonNull Long userId, @NonNull Long taskId) {
-    Long userAuthorId = taskRepository.getReferenceById(userId).getUserAuthor().getUserId();
-    if (!userAuthorId.equals(taskId)) {
+  public void delete(@NotNull Long userId, @NotNull Long taskId) {
+    Long userAuthorId = getTaskById(taskId).getUserAuthor().getUserId();
+    if (!userAuthorId.equals(userId)) {
       throw new TaskServiceException("Only the author can delete the task!");
     }
 
     taskRepository.deleteById(taskId);
+  }
+
+  private Task getTaskById(Long taskId) {
+    return taskRepository
+        .findById(taskId)
+        .orElseThrow(() -> new EntityNotFoundException("Task not found with id:" + taskId));
   }
 }
