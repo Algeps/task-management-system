@@ -8,8 +8,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 import ru.algeps.edu.taskmanagementsystem.dto.jwt.JwtRequest;
 import ru.algeps.edu.taskmanagementsystem.dto.jwt.JwtResponse;
+import ru.algeps.edu.taskmanagementsystem.dto.jwt.RefreshJwtRequest;
 import ru.algeps.edu.taskmanagementsystem.exceptions.JwtAuthException;
 import ru.algeps.edu.taskmanagementsystem.model.JwtAuthentication;
 import ru.algeps.edu.taskmanagementsystem.model.User;
@@ -34,6 +36,11 @@ public class JwtAuthServiceImpl implements JwtAuthService {
     } else {
       throw new JwtAuthException("Incorrect login or password!");
     }
+  }
+
+  @Override
+  public void logout(@NotNull String token) {
+    refreshStorage.remove(token);
   }
 
   private boolean isCorrectPassword(String expectedPassword, String actualPassword) {

@@ -7,6 +7,7 @@ import ru.algeps.edu.taskmanagementsystem.model.JwtAuthentication;
 
 public interface JwtAuthService {
   JwtResponse login(JwtRequest authRequest) throws JwtAuthException;
+  void logout(String token);
 
   boolean validateAccessToken(String token) throws JwtAuthException;
 

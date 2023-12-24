@@ -41,6 +41,17 @@ public class AuthController {
     return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(dto));
   }
 
+  @Operation(summary = "Logout пользователя")
+  @ApiResponses(
+      @ApiResponse(
+          responseCode = "200",
+          description = "Успешный выход. Удаляет Refresh-токен из хранилища"))
+  @PostMapping("/logout")
+  public ResponseEntity<Void> logout(@RequestBody RefreshJwtRequest request) {
+    authService.logout(request.refreshToken());
+    return ResponseEntity.ok().build();
+  }
+
   @Operation(summary = "Получение нового Access-токена")
   @PostMapping("token")
   public ResponseEntity<JwtResponse> getNewAccessToken(@RequestBody RefreshJwtRequest request) {
