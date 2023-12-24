@@ -1,12 +1,11 @@
-package ru.algeps.edu.taskmanager;
+package ru.algeps.edu.taskmanagementsystem;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class TaskManagerApplication {
-
+public class TaskManagementSystemApplication {
   public static void main(String[] args) {
-    SpringApplication.run(TaskManagerApplication.class, args);
+    SpringApplication.run(TaskManagementSystemApplication.class, args);
   }
 }
