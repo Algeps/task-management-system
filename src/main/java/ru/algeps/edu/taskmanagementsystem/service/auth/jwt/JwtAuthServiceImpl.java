@@ -1,10 +1,9 @@
 package ru.algeps.edu.taskmanagementsystem.service.auth.jwt;
 
 import io.jsonwebtoken.*;
+import jakarta.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
-
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -73,10 +72,10 @@ public class JwtAuthServiceImpl implements JwtAuthService {
   public JwtResponse refresh(@NotNull String refreshToken) throws JwtAuthException {
     if (isValidRefreshToken(refreshToken)) {
       Claims claims = jwtProvider.getRefreshClaims(refreshToken);
-      String login = claims.getSubject();
-      String saveRefreshToken = refreshStorage.get(login);
+      String email = claims.getSubject();
+      String saveRefreshToken = refreshStorage.get(email);
       if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
-        User user = getUserFromRepository(login);
+        User user = getUserFromRepository(email);
         String accessToken = jwtProvider.generateAccessToken(user);
         String newRefreshToken = jwtProvider.generateRefreshToken(user);
         refreshStorage.put(user.getEmail(), newRefreshToken);
